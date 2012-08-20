@@ -3,7 +3,7 @@ package bootstrap.liftweb
 import net.liftweb.http.LiftRules
 import net.liftweb.util.Props
 import net.liftweb.mapper.{DB, DefaultConnectionIdentifier, DBLogEntry, ConnectionIdentifier, ConnectionManager}
-import net.liftweb.common.{Box, Empty, Full}
+import net.liftweb.common.{Box, Empty, Full, Logger}
 import net.liftweb.util.Props
 import java.sql.{Connection, DriverManager}
 
@@ -15,11 +15,13 @@ class Boot {
     LiftRules.statelessDispatch.append(com.code.api.Main)
     DB.addLogFunc { 
       case (query, time) => {
-        query.allEntries.foreach({ case DBLogEntry(stmt, duration) => println("SQL: " + stmt + " took " + duration + "ms")})
+        query.allEntries.foreach({ case DBLogEntry(stmt, duration) => logger.info("SQL: " + stmt + " took " + duration + "ms")})
       }
     }
   }
 }
+
+object logger extends Logger
 
 object myDBVendor extends ConnectionManager {
   private var pool: List[Connection] = Nil

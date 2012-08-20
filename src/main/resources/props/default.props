@@ -1,0 +1,4 @@
+db.driver=org.postgresql.Driver
+db.url=jdbc:postgresql:imbox_development
+db.user=postgres
+db.password=

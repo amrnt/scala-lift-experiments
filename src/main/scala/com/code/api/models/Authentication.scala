@@ -1,35 +1,28 @@
-package com.code.api
-package models
+package com.code.api.models
 
-import net.liftweb.mapper._
+import org.squeryl._
+import org.squeryl.PrimitiveTypeMode._
+import org.squeryl.dsl._
+import com.code.api.models.Tables._
 
-class Authentication extends LongKeyedMapper[Authentication] {
-  def getSingleton = Authentication
-  def primaryKeyField = id
+class Authentication(val id: Long,
+           val user_id: Long,
+           val full_name: String,
+           val provider: String,
+           val uid: String,
+           val fetched_friends_count: Int,
+           val friends_count: Int) extends KeyedEntity[Long]{
 
-  object id extends MappedLongIndex(this)
-  object provider extends MappedString(this, 255)
-  object uid extends MappedString(this, 255)
-  object fetched_friends_count extends MappedInt(this)
-  object friends_count extends MappedInt(this)
-
-  object user_id extends MappedLongForeignKey(this, User)
+  lazy val user: ManyToOne[User] = userToAuthentications.right(this)
 
   def connected_providers = Map {
-    provider.get.toString -> uid.get.toString
+    provider -> uid
   }
 
   def worker_progress = Map() ++ (
-    if(friends_count.get != 0)
-      Seq(provider.get.toString -> (fetched_friends_count.get * 100 / friends_count.get).toLong)
+    if(friends_count != 0)
+      Seq(provider -> (fetched_friends_count * 100 / friends_count).toLong)
     else
-      Seq(provider.get.toString -> 0)
+      Seq(provider -> 0)
   )
-
-}
-
-object Authentication extends Authentication with LongKeyedMetaMapper[Authentication] {
-  override def dbTableName = "authentications"
-
-  override lazy val fieldOrder = List(id)
 }

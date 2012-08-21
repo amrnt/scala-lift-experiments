@@ -1,36 +1,48 @@
 package com.code.api.models
 
-import org.squeryl._
-import org.squeryl.PrimitiveTypeMode._
-import org.squeryl.dsl._
-import com.code.api.models.Tables._
+import net.liftweb.record.{MetaRecord, Record}
+import net.liftweb.record.field._
+import net.liftweb.squerylrecord.KeyedRecord
+import net.liftweb.squerylrecord.RecordTypeMode._
+import org.squeryl.annotations.Column
+import org.squeryl.Query
+import org.squeryl.annotations.Column
 
-class User(val id: Long,
-           val full_name: String,
-           val time_zone: String,
-           val last_sign_in_at: String,
-           val current_sign_in_at: String,
-           val image_square: String,
-           val image_small: String,
-           val image_normal: String,
-           val image_large: String) extends KeyedEntity[Long] {
+import DBSchema._
 
-  lazy val authentications: OneToMany[Authentication] = userToAuthentications.left(this)
+class User private () extends Record[User] with KeyedRecord[Long] {
+  def meta = User
+
+  @Column(name="id")
+  val idField = new LongField(this)
+
+  val full_name = new StringField(this, "")
+  val time_zone = new StringField(this, "")
+  val last_sign_in_at = new StringField(this, "")
+  val current_sign_in_at = new StringField(this, "")
+  val image_square = new StringField(this, "")
+  val image_small = new StringField(this, "")
+  val image_normal = new StringField(this, "")
+  val image_large = new StringField(this, "")
+
+  lazy val authentications = userToAuthentications.left(this)
 
   def as_json_map = Map (
     "id" -> id.toLong,
-    "full_name" -> full_name,
-    "time_zone" -> time_zone,
+    "full_name" -> full_name.toString,
+    "time_zone" -> time_zone.toString,
     "last_sign_in" -> Map (
       "at" -> last_sign_in_at.toString,
       "is_first" -> (current_sign_in_at == last_sign_in_at)),
     "images" -> Map (
-      "square" -> image_square,
-      "small" -> image_small,
-      "normal" -> image_normal,
-      "large" -> image_large
+      "square" -> image_square.toString,
+      "small" -> image_small.toString,
+      "normal" -> image_normal.toString,
+      "large" -> image_large.toString
     ),
     "status" -> authentications.map(_.worker_progress).head,
     "connected_providers" -> authentications.map(_.connected_providers).head
   )
 }
+
+object User extends User with MetaRecord[User]

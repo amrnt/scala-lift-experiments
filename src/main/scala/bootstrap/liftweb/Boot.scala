@@ -1,27 +1,34 @@
 package bootstrap.liftweb
 
-import net.liftweb.http.LiftRules
+import net.liftweb.common.Loggable
 import net.liftweb.util.Props
-
-import org.squeryl._
+import net.liftweb.http.LiftRules
+import net.liftweb.squerylrecord.SquerylRecord
+import org.squeryl.Session
 import org.squeryl.adapters.PostgreSqlAdapter
-import org.squeryl.PrimitiveTypeMode._
+
 import java.sql.DriverManager
 
-import com.code.api.models.Tables._
-
-class Boot {
+class Boot extends Loggable {
   def boot {
+    LiftRules.addToPackages("code")
+
     Class.forName(Props.get("db.driver") openOr "")
-    SessionFactory.concreteFactory = Some(() =>
-      Session.create(
-        DriverManager.getConnection(Props.get("db.url")  openOr "", Props.get("db.user")  openOr "", Props.get("db.password")  openOr ""),
+    SquerylRecord.initWithSquerylSession { 
+      val session = Session.create(
+        DriverManager.getConnection(
+          Props.get("db.url")  openOr "",
+          Props.get("db.user")  openOr "",
+          Props.get("db.password")  openOr ""
+        ),
         new PostgreSqlAdapter
       )
-    )
-
-    LiftRules.addToPackages("code")
+      session.setLogger(statement => println(statement))
+      session
+    }
+    
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
     LiftRules.statelessDispatch.append(com.code.api.Main)
   }
+
 }

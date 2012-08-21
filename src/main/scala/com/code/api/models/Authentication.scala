@@ -1,28 +1,35 @@
 package com.code.api.models
 
-import org.squeryl._
-import org.squeryl.PrimitiveTypeMode._
-import org.squeryl.dsl._
-import com.code.api.models.Tables._
+import net.liftweb.record.{MetaRecord, Record}
+import net.liftweb.record.field._
+import net.liftweb.squerylrecord.KeyedRecord
+import net.liftweb.squerylrecord.RecordTypeMode._
+import org.squeryl.annotations.Column
+import org.squeryl.Query
+import org.squeryl.annotations.Column
 
-class Authentication(val id: Long,
-           val user_id: Long,
-           val full_name: String,
-           val provider: String,
-           val uid: String,
-           val fetched_friends_count: Int,
-           val friends_count: Int) extends KeyedEntity[Long]{
+class Authentication private () extends Record[Authentication] with KeyedRecord[Long] {
+  def meta = Authentication
 
-  lazy val user: ManyToOne[User] = userToAuthentications.right(this)
+  @Column(name="id")
+  val idField = new LongField(this)
+
+  val provider = new StringField(this, "")
+  val uid = new LongField(this)
+  val fetched_friends_count = new IntField(this)
+  val friends_count = new IntField(this)
+  val user_id = new LongField(this)
 
   def connected_providers = Map {
-    provider -> uid
+    provider.get.toString -> uid.get.toString
   }
 
   def worker_progress = Map() ++ (
-    if(friends_count != 0)
-      Seq(provider -> (fetched_friends_count * 100 / friends_count).toLong)
+    if(friends_count.get != 0)
+      Seq(provider.get.toString -> (fetched_friends_count.get * 100 / friends_count.get).toLong)
     else
-      Seq(provider -> 0)
+      Seq(provider.get.toString -> 0)
   )
 }
+
+object Authentication extends Authentication with MetaRecord[Authentication]

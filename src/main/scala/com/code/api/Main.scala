@@ -5,7 +5,7 @@ import net.liftweb.http.rest._
 import net.liftweb.json._
 
 import org.squeryl.PrimitiveTypeMode._
-import com.code.api.models.Tables._
+import com.code.api.models.DBSchema._
 
 object auth_token extends RequestVar[String](S.param("auth_token").map(_ toString) openOr "")
 
@@ -39,11 +39,9 @@ object Main extends RestHelper {
     case Nil JsonGet _ => {
       inTransaction {
         Extraction.decompose(
-          Map("count" ->
-            from(users)((u) =>
-              compute(count())
-            ).map(m => m.measures).head
-          )
+          from(users)(
+            select(_)
+          ).map(m => m.as_json_map)
         )
       }
     }

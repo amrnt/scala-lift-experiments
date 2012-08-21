@@ -9,30 +9,30 @@ object auth_token extends RequestVar[String](S.param("auth_token").map(_ toStrin
 
 object Main extends RestHelper {
 
-  serve( "2" / "me" prefix {
-    case Nil JsonGet _ => {
-      Extraction.decompose(
-        (User findAll) map(_ as_json_map)
-      )
-    }
-  })
+  // serve( "2" / "me" prefix {
+  //   case Nil JsonGet _ => {
+  //     Extraction.decompose(
+  //       (User findAll) map(_ as_json_map)
+  //     )
+  //   }
+  // })
 
-  serve( "2" / "users" prefix {
-    case "count" :: Nil JsonGet _ => {
-      Extraction.decompose(Map("count" -> (User count)))
-    }
+  // serve( "2" / "users" prefix {
+  //   case "count" :: Nil JsonGet _ => {
+  //     Extraction.decompose(Map("count" -> (User count)))
+  //   }
 
-    case Nil JsonGet _ => {
-      Extraction.decompose(
-        (User findAll) map(_ as_json_map)
-      )
-    }
+  //   case Nil JsonGet _ => {
+  //     Extraction.decompose(
+  //       (User findAll) map(_ as_json_map)
+  //     )
+  //   }
 
-    case id :: _ JsonGet _ => {
-      Extraction.decompose(
-        (User find(id)) map(_ as_json_map) head
-      )
-    }
-  })
+  //   case id :: _ JsonGet _ => {
+  //     Extraction.decompose(
+  //       (User find(id)) map(_ as_json_map) head
+  //     )
+  //   }
+  // })
 
 }

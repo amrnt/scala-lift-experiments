@@ -7,6 +7,7 @@ import net.liftweb.squerylrecord.RecordTypeMode._
 import org.squeryl.annotations.Column
 import org.squeryl.Query
 import org.squeryl.annotations.Column
+import DBSchema._
 
 class Authentication private () extends Record[Authentication] with KeyedRecord[Long] {
   def meta = Authentication

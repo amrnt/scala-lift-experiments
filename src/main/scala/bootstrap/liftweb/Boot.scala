@@ -6,7 +6,6 @@ import net.liftweb.http.LiftRules
 import net.liftweb.squerylrecord.SquerylRecord
 import org.squeryl.Session
 import org.squeryl.adapters.PostgreSqlAdapter
-
 import java.sql.DriverManager
 
 class Boot extends Loggable {
@@ -26,7 +25,7 @@ class Boot extends Loggable {
       session.setLogger(statement => println(statement))
       session
     }
-    
+
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
     LiftRules.statelessDispatch.append(com.code.api.Main)
   }

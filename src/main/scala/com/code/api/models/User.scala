@@ -5,9 +5,6 @@ import net.liftweb.record.field._
 import net.liftweb.squerylrecord.KeyedRecord
 import net.liftweb.squerylrecord.RecordTypeMode._
 import org.squeryl.annotations.Column
-import org.squeryl.Query
-import org.squeryl.annotations.Column
-
 import DBSchema._
 
 class User private () extends Record[User] with KeyedRecord[Long] {
@@ -18,6 +15,7 @@ class User private () extends Record[User] with KeyedRecord[Long] {
 
   val full_name = new StringField(this, "")
   val time_zone = new StringField(this, "")
+  val authentication_token = new StringField(this, "")
   val last_sign_in_at = new StringField(this, "")
   val current_sign_in_at = new StringField(this, "")
   val image_square = new StringField(this, "")
@@ -27,7 +25,7 @@ class User private () extends Record[User] with KeyedRecord[Long] {
 
   lazy val authentications = userToAuthentications.left(this)
 
-  def as_json_map = Map (
+  def mapIt = Map (
     "id" -> id.toLong,
     "full_name" -> full_name.toString,
     "time_zone" -> time_zone.toString,

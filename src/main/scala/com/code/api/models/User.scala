@@ -5,7 +5,7 @@ import net.liftweb.record.field._
 import net.liftweb.squerylrecord.KeyedRecord
 import net.liftweb.squerylrecord.RecordTypeMode._
 import org.squeryl.annotations.Column
-import DBSchema._
+import com.code.api.models.DBSchema._
 
 class User private () extends Record[User] with KeyedRecord[Long] {
   def meta = User

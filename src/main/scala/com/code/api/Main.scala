@@ -9,6 +9,7 @@ import org.squeryl.PrimitiveTypeMode._
 import com.code.api.models.DBSchema._
 
 object Main extends RestHelper {
+
   serve {
 
     case req@Req(List("api", "2", "users"), _, GetRequest) =>
@@ -29,6 +30,7 @@ object Main extends RestHelper {
           )).map(m => m.mapIt)
         }
       ))
+
   }
 
   override implicit val formats = net.liftweb.json.DefaultFormats
@@ -37,12 +39,8 @@ object Main extends RestHelper {
     lazy val xmlObject = <users>{Xml.toXml(Extraction.decompose(Map("user" -> item)))}</users>
 
     suffix.toLowerCase match {
-      case "xml"  => {
-        XmlResponse(xmlObject)
-      }
-      case "json" => {
-        JsonResponse(jsonObject)
-      }
+      case "xml"  => XmlResponse(xmlObject)
+      case "json" => JsonResponse(jsonObject)
       case ""     => {
         if(accept.find(_.toLowerCase.contains("application/json")).isDefined ||
           accept.find(_.toLowerCase.contains("application/javascript")).isDefined ||
@@ -51,7 +49,8 @@ object Main extends RestHelper {
           JsonResponse(jsonObject)
         }else if (
           accept.find(_.toLowerCase.contains("text/xml")).isDefined ||
-          accept.find(_.toLowerCase.contains("application/xml")).isDefined){
+          accept.find(_.toLowerCase.contains("application/xml")).isDefined)
+        {
           XmlResponse(xmlObject)
         } else{
           JsonResponse(jsonObject)
@@ -59,6 +58,5 @@ object Main extends RestHelper {
       }
       case _      => NotFoundResponse("Bad URI")
     }
-
   }
 }

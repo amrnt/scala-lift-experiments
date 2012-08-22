@@ -7,10 +7,15 @@ import net.liftweb.squerylrecord.SquerylRecord
 import org.squeryl.Session
 import org.squeryl.adapters.PostgreSqlAdapter
 import java.sql.DriverManager
+import net.liftweb.http._
 
 class Boot extends Loggable {
   def boot {
     LiftRules.addToPackages("code")
+
+    LiftRules.statelessRewrite.prepend( {
+      case RewriteRequest(ParsePath(path, _, _, true), _, _) if path.last == "index" => RewriteResponse(path.init)
+    })
 
     Class.forName(Props.get("db.driver") openOr "")
     SquerylRecord.initWithSquerylSession { 

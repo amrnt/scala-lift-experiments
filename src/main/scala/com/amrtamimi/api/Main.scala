@@ -1,4 +1,4 @@
-package com.code.api
+package com.amrtamimi.api
 
 import net.liftweb.http._
 import net.liftweb.http.rest._
@@ -6,23 +6,21 @@ import net.liftweb.common.Full
 import net.liftweb.json._
 import scala.xml._
 import org.squeryl.PrimitiveTypeMode._
-import com.code.api.models.DBSchema._
+import com.amrtamimi.api.models.DBSchema._
 
 object Main extends RestHelper {
 
   serve {
 
-    case req@Req(List("api", "2", "users"), _, GetRequest) =>
-      () =>  Full(toResponse(req.headers("accept"), req.path.suffix,
-        inTransaction {
-          (from(users)(
-            select(_)
-          )).map(m => m.mapIt)
-        }
+    case req@Req(List("api", "2", "users"), _, GetRequest) => () =>
+      Full(toResponse(req.headers("accept"), req.path.suffix,
+        (from(users)(
+          select(_)
+        )).map(m => m.mapIt)
       ))
 
-    case req@Req(List("api", "2", "users", userId), _, GetRequest) =>
-      () =>  Full(toResponse(req.headers("accept"), req.path.suffix,
+    case req@Req(List("api", "2", "users", userId), _, GetRequest) => () =>
+      Full(toResponse(req.headers("accept"), req.path.suffix,
         inTransaction {
           (from(users)(u =>
             where(u.id === userId.toLong)

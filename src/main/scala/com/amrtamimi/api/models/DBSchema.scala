@@ -1,4 +1,4 @@
-package com.code.api.models
+package com.amrtamimi.api.models
 
 import org.squeryl.Schema
 import net.liftweb.squerylrecord.RecordTypeMode._

@@ -1,11 +1,11 @@
-package com.code.api.models
+package com.amrtamimi.api.models
 
 import net.liftweb.record.{MetaRecord, Record}
 import net.liftweb.record.field._
 import net.liftweb.squerylrecord.KeyedRecord
 import net.liftweb.squerylrecord.RecordTypeMode._
 import org.squeryl.annotations.Column
-import com.code.api.models.DBSchema._
+import com.amrtamimi.api.models.DBSchema._
 
 class Authentication private () extends Record[Authentication] with KeyedRecord[Long] {
   def meta = Authentication

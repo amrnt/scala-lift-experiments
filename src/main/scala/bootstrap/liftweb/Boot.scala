@@ -1,9 +1,10 @@
 package bootstrap.liftweb
 
 import net.liftweb.common.Loggable
-import net.liftweb.util.Props
-import net.liftweb.http.LiftRules
+import net.liftweb.util.{Props, LoanWrapper}
+import net.liftweb.http.{LiftRules, S}
 import net.liftweb.squerylrecord.SquerylRecord
+import net.liftweb.squerylrecord.RecordTypeMode._
 import org.squeryl.Session
 import org.squeryl.adapters.PostgreSqlAdapter
 import java.sql.DriverManager
@@ -11,7 +12,7 @@ import net.liftweb.http._
 
 class Boot extends Loggable {
   def boot {
-    LiftRules.addToPackages("code")
+    LiftRules.addToPackages("amrtamimi")
 
     LiftRules.statelessRewrite.prepend( {
       case RewriteRequest(ParsePath(path, _, _, true), _, _) if path.last == "index" => RewriteResponse(path.init)
@@ -31,8 +32,16 @@ class Boot extends Loggable {
       session
     }
 
+    S.addAround(new LoanWrapper{
+        override def apply[T](f: => T): T = {
+          inTransaction{
+              f
+          }
+        }
+    })
+
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
-    LiftRules.statelessDispatch.append(com.code.api.Main)
+    LiftRules.statelessDispatch.append(com.amrtamimi.api.Main)
   }
 
 }

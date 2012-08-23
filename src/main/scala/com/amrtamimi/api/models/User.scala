@@ -1,9 +1,10 @@
 package com.amrtamimi.api.models
 
 import net.liftweb.record.{MetaRecord, Record}
-import net.liftweb.record.field._
+import net.liftweb.record.field.{LongField, StringField}
 import net.liftweb.squerylrecord.KeyedRecord
 import net.liftweb.squerylrecord.RecordTypeMode._
+import org.squeryl.Query
 import org.squeryl.annotations.Column
 import com.amrtamimi.api.models.DBSchema._
 

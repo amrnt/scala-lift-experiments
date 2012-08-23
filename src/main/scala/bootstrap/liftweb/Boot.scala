@@ -1,10 +1,8 @@
 package bootstrap.liftweb
 
 import net.liftweb.http.LiftRules
-import net.liftweb.util.Props
-import net.liftweb.common.{Box, Empty, Full, Logger}
-import net.liftweb.util.Props
-import java.sql.{Connection, DriverManager}
+import java.sql.DriverManager
+import ru.circumflex.orm._
 
 class Boot {
   def boot {

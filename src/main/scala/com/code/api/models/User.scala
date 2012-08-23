@@ -1,7 +1,7 @@
 package com.code.api
 package models
 
-import ru.circumflex._, orm._
+import ru.circumflex.orm._
 
 class User extends Record[Long, User] {
   val id = "id".BIGINT.NOT_NULL.AUTO_INCREMENT

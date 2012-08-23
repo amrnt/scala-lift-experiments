@@ -7,7 +7,6 @@ import com.code.api.models.Tables._
 
 class Authentication(val id: Long,
            val user_id: Long,
-           val full_name: String,
            val provider: String,
            val uid: String,
            val fetched_friends_count: Int,

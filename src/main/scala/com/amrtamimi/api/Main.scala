@@ -5,8 +5,11 @@ import net.liftweb.http.rest._
 import net.liftweb.common.Full
 import net.liftweb.json._
 import scala.xml._
-import org.squeryl.PrimitiveTypeMode._
+// import org.squeryl.PrimitiveTypeMode._
+import net.liftweb.squerylrecord.RecordTypeMode._
 import com.amrtamimi.api.models.DBSchema._
+
+object auth_token extends RequestVar[String](S.param("auth_token").map(_ toString) openOr "")
 
 object Main extends RestHelper {
 
@@ -21,12 +24,18 @@ object Main extends RestHelper {
 
     case req@Req(List("api", "2", "users", userId), _, GetRequest) => () =>
       Full(toResponse(req.headers("accept"), req.path.suffix,
-        inTransaction {
-          (from(users)(u =>
-            where(u.id === userId.toLong)
-            select (u)
-          )).map(m => m.mapIt)
-        }
+        (from(users)(u =>
+          where(u.id === userId.toLong)
+          select (u)
+        )).map(m => m.mapIt)
+      ))
+
+    case req@Req(List("api", "2", "me"), _, GetRequest) => () =>
+      Full(toResponse(req.headers("accept"), req.path.suffix,
+        (from(users)(u =>
+          where(u.authentication_token === auth_token.toString)
+          select (u)
+        )).map(m => m.mapIt)
       ))
 
   }

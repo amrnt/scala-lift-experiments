@@ -27,7 +27,7 @@ object Main extends RestHelper {
         (from(users)(u =>
           where(u.id === userId.toLong)
           select (u)
-        )).map(m => m.mapIt)
+        )).map(m => m.mapIt) head
       ))
 
     case req@Req(List("api", "2", "me"), _, GetRequest) => () =>
@@ -35,7 +35,7 @@ object Main extends RestHelper {
         (from(users)(u =>
           where(u.authentication_token === auth_token.toString)
           select (u)
-        )).map(m => m.mapIt)
+        )).map(m => m.mapIt) head
       ))
 
   }
